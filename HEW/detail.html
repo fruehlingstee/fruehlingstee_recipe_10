@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>レシピ詳細 - Recipe2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html" style="font-size:1.5rem; text-decoration:none;"><img src="images/C'est trop bon logo.png" alt="" style="width: 80px;"></a>
+    <div class="nav-links">
+        <a href="renkin.html">食材錬金</a>
+        <a href="roulette.html">食材ルーレット</a>
+        <a href="ranking.html">ランキング</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="auth.html">ログイン</a>
+    </div>
+</nav>
+
+<div class="main">
+    <img id="rImg" class="hero-img">
+    <div class="p-20">
+        <h1 id="rName">レシピ名</h1>
+        <div style="margin-bottom:20px;">
+            <button class="btn-action fav-btn" onclick="toggleFav()">❤️ お気に入り</button>
+        </div>
+        <div id="aiBox" style="display:none; background:#f5f3ff; padding:15px; border-radius:10px; margin-bottom:20px; border-left:4px solid #8b5cf6;"></div>
+        
+        <h3>材料</h3>
+        <ul id="rIngs"></ul>
+        
+        <h3>作り方</h3>
+        <ol id="rSteps"></ol>
+        <a href="index.html">← 戻る</a>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C'est trop bon</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html" style="font-size:1.5rem; text-decoration:none;"><img src="images/C'est trop bon logo.png" alt="" style="width: 80px;"></a>
+    <div class="nav-links">
+        <a href="renkin.html">食材錬金</a>
+        <a href="roulette.html">食材ルーレット</a>
+        <a href="ranking.html">ランキング</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="auth.html">ログイン</a>
+    </div>
+</nav>
+
+<div class="container-index">
+    <div class="search-section">
+        <h1>C'est trop bon</h1>
+        <p>食材を入力すると、ぴったりのレシピが表示されます。</p>
+        <div class="input-group">
+            <input type="text" id="ingInput" placeholder="例: 鶏肉, 卵, トマト">
+            <button class="add-btn" onclick="addIng()">追加</button>
+        </div>
+        <div id="tagContainer" class="tags"></div>
+    </div>
+
+    <!-- ここに結果が表示される -->
+    <div id="recipeGrid" class="recipe-grid"></div>
+    <div id="emptyState" class="empty-state">食材を入力して、今日のメニューを決めましょう！</div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

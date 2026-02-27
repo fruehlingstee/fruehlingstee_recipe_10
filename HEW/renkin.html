@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>レシピ錬金術 - 画像版</title>
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Yomogi&family=Kiwi+Maru:wght@400;500&family=Zen+Maru+Gothic:wght@500&display=swap" rel="stylesheet">
+
+</head>
+<body class="game">
+
+<nav>
+    <a href="index.html" style="font-size:1.5rem; text-decoration:none;"><img src="images/C'est trop bon logo.png" alt="" style="width: 80px;"></a>
+    <div class="nav-links">
+        <a href="renkin.html">食材錬金</a>
+        <a href="roulette.html">食材ルーレット</a>
+        <a href="ranking.html">ランキング</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="auth.html">ログイン</a>
+    </div>
+</nav>
+
+<div class="game-box">
+    <h2>食材を合成しよう</h2>
+    <div class="drop-area" id="dropZone" ondrop="drop(event)" ondragover="allow(event)">
+        <p id="msg">ここに2つの食材をドロップ！</p>
+        <div id="result-overlay">
+            <h3 id="resName"></h3>
+            <img id="resImg" src="" style="width:120px; margin-bottom:10px; border-radius:10px;">
+            <a href="#" id="resLink" class="recipe-btn">レシピを見る</a>
+            <button onclick="resetHighlight()"style="margin-top:10px; border:none; background:none; cursor:pointer; color:#888;">やり直す</button>
+        </div>
+    </div>
+
+    <div class="ingredient-list">
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="白米"><img src="images/gohan_shiromeshi_white.png" alt="白米"><p>白米</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="パン"><img src="images/pan.png" alt="パン"><p>パン</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="バゲット"><img src="images/baguette_cut.png" alt="バゲット"><p>バゲット</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="パスタ"><img src="images/pasta.png" alt="ゆで麺"><p>パスタ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="鮭"><img src="images/sakana_sake.png" alt="鮭"><p>鮭</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="鶏肉"><img src="images/niku_sasami.png" alt="鶏肉"><p>鶏肉</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="牛肉"><img src="images/niku_beef_01.png" alt="牛肉"><p>牛肉</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="豚肉"><img src="images/niku_pork_01.png" alt="豚肉"><p>豚肉</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="卵"><img src="images/namatamago_shirodama.png" alt="卵"><p>卵</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="なす"><img src="images/nasu_01.png" alt="なす"><p>なす</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="にんじん"><img src="images/ninjin.png" alt="にんじん"><p>にんじん</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="ねぎ"><img src="images/negi.png" alt="ねぎ"><p>ねぎ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="キャベツ"><img src="images/kyabetsu.png" alt="キャベツ"><p>キャベツ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="ほうれん草"><img src="images/horenso.png" alt="ほうれん草"><p>ほうれん草</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="ブロッコリー"><img src="images/broccoli.png" alt="ブロッコリー"><p>ブロッコリー</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="じゃがいも"><img src="images/jagaimo_02.png" alt="じゃがいも"><p>じゃがいも</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="ピーマン"><img src="images/piman_aopiman.png" alt="ピーマン"><p>ピーマン</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="タマネギ"><img src="images/tamanegi.png" alt="タマネギ"><p>タマネギ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="トマト"><img src="images/tomato.png" alt="トマト"><p>トマト</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="舞茸"><img src="images/maikate.png" alt="舞茸"><p>舞茸</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="しめじ"><img src="images/shimeji_01.png" alt="しめじ"><p>しめじ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="にんにく"><img src="images/ninniku.png" alt="にんにく"><p>にんにく</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="チーズ"><img src="images/cheese.png" alt="チーズ"><p>チーズ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="セロリ"><img src="images/celery.png" alt="セロリ"><p>セロリ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="アボカド"><img src="images/avocado_cut.png" alt="アボカド"><p>アボカド</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="里芋"><img src="images/satoimo.png" alt="里芋"><p>里芋</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="エビ"><img src="images/ebi.png" alt="エビ"><p>エビ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="タコ"><img src="images/tako_cut.png" alt="タコ"><p>タコ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="イカ"><img src="images/ika_cut.png" alt="イカ"><p>イカ</p></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" data-name="マヨネーズ"><img src="images/tube_mayonnaise.png" alt="マヨネーズ"><p>マヨネーズ</p></div>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+
+<script>
+let selected = [];
+
+function allow(e){
+  e.preventDefault();
+}
+
+function drag(e){
+  const item = e.target.closest(".item");
+  e.dataTransfer.setData("name", item.dataset.name);
+}
+
+/*  相方候補取得  */
+function getMatchIngredients(first){
+  return renkinRecipes
+    .filter(r => r.a === first || r.b === first)
+    .map(r => r.a === first ? r.b : r.a);
+}
+
+/*  ハイライト解除  */
+function resetHighlight(){
+  document.querySelectorAll(".item").forEach(item=>{
+    item.classList.remove("match","dim");
+  });
+  selected = [];
+  document.getElementById("msg").innerText =
+    "ここに2つの食材をドロップ！";
+  document.getElementById("result-overlay").style.display = "none";
+}
+
+/*  drop処理  */
+function drop(e){
+  e.preventDefault();
+
+  const name = e.dataTransfer.getData("name");
+  if (!name || selected.includes(name)) return;
+
+  selected.push(name);
+
+  /*  1つ目  */
+  if (selected.length === 1){
+    const matches = getMatchIngredients(name);
+
+    document.querySelectorAll(".item").forEach(item=>{
+      const ing = item.dataset.name;
+      item.classList.remove("match","dim");
+
+      if (matches.includes(ing)){
+        item.classList.add("match");
+      } else {
+        item.classList.add("dim");
+      }
+    });
+
+    document.getElementById("msg").innerText =
+      "相性のいい食材が光ってるよ！";
+    return;
+  }
+
+  /*  2つ目  */
+  const res = findRenkin(selected[0], selected[1]);
+  const overlay = document.getElementById("result-overlay");
+
+  if (res){
+    resName.innerText = "成功！ " + res.name;
+    resImg.src = res.img;
+    resLink.href = `detail.html?id=${res.id}`;
+    resLink.style.display = "inline-block";
+  } else {
+    resName.innerText = "失敗…";
+    resLink.style.display = "none";
+  }
+
+  overlay.style.display = "flex";
+}
+</script>
+
+
+</body>
+</html>

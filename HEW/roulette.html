@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>献立ルーレット</title>
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="game">
+
+<nav>
+    <a href="index.html" style="font-size:1.5rem; text-decoration:none;"><img src="images/C'est trop bon logo.png" alt="" style="width: 80px;"></a>
+    <div class="nav-links">
+        <a href="renkin.html">食材錬金</a>
+        <a href="roulette.html">食材ルーレット</a>
+        <a href="ranking.html">ランキング</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="auth.html">ログイン</a>
+    </div>
+</nav>
+
+<div class="roulette-wrap">
+  <img id="rouletteImg" src="images/gohan_shiromeshi_white.png" class="roulette-img">
+  <div id="display" class="roulette-text">食材を選ぶ</div>
+  <div class="roulette-buttons">
+    <button id="spinBtn" onclick="spin()">回す</button>
+    <button id="toRecipeBtn" onclick="goToRecipe()" style="display:none;">レシピを見る →</button>
+  </div>
+</div>
+
+<script>
+const items = [
+ {name:"白米",img:"images/gohan_shiromeshi_white.png"},
+ {name:"パン",img:"images/pan.png"},
+ {name:"バゲット",img:"images/baguette_cut.png"},
+ {name:"パスタ",img:"images/pasta.png"},
+ {name:"鮭",img:"images/sakana_sake.png"},
+ {name:"鶏肉",img:"images/niku_sasami.png"},
+ {name:"牛肉",img:"images/niku_beef_01.png"},
+ {name:"豚肉",img:"images/niku_pork_01.png"},
+ {name:"卵",img:"images/namatamago_shirodama.png"},
+ {name:"なす",img:"images/nasu_01.png"},
+ {name:"にんじん",img:"images/ninjin.png"},
+ {name:"ねぎ",img:"images/negi.png"},
+ {name:"キャベツ",img:"images/kyabetsu.png"},
+ {name:"ほうれん草",img:"images/horenso.png"},
+ {name:"ブロッコリー",img:"images/broccoli.png"},
+ {name:"じゃがいも",img:"images/jagaimo_02.png"},
+ {name:"ピーマン",img:"images/piman_aopiman.png"},
+ {name:"タマネギ",img:"images/tamanegi.png"},
+ {name:"トマト",img:"images/tomato.png"},
+ {name:"舞茸",img:"images/maikate.png"},
+ {name:"しめじ",img:"images/shimeji_01.png"},
+ {name:"にんにく",img:"images/ninniku.png"},
+ {name:"チーズ",img:"images/cheese.png"},
+ {name:"セロリ",img:"images/celery.png"},
+ {name:"アボカド",img:"images/avocado_cut.png"},
+ {name:"里芋",img:"images/satoimo.png"},
+ {name:"エビ",img:"images/ebi.png"},
+ {name:"タコ",img:"images/tako_cut.png"},
+ {name:"イカ",img:"images/ika_cut.png"},
+ {name:"マヨネーズ",img:"images/tube_mayonnaise.png"},
+];
+
+let running=false;
+
+function spin(){
+
+ if(running) return;
+ running=true;
+
+ const display=document.getElementById("display");
+ const img=document.getElementById("rouletteImg");
+ const btn=document.getElementById("spinBtn");
+
+ btn.disabled=true;
+
+ let count=0;
+ let speed=80;
+ let result=null;
+
+ function loop(){
+
+  result = items[Math.floor(Math.random() * items.length)];
+
+  display.innerText=result.name;
+  img.src=result.img;
+
+  count++;
+  if(count>25) speed+=20;
+
+  if(count>40){
+   finish(result);
+   return;
+  }
+
+  setTimeout(loop,speed);
+ }
+
+ loop();
+}
+
+function finish(result){
+  running = false;
+
+  const btn = document.getElementById("spinBtn");
+  const linkBtn = document.getElementById("toRecipeBtn");
+
+  btn.disabled = false;
+
+  // 食材保存
+  localStorage.setItem("rouletteIngredient", result.name);
+
+  // ボタン表示
+  linkBtn.style.display = "inline-block";
+}
+
+function goToRecipe(){
+  window.location.href = "index.html";
+}
+
+
+</script>
+
+
+</body>
+</html>

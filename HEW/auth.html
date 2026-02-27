@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン/登録 - レシピサイト2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+    <a href="index.html" style="font-size:1.5rem; text-decoration:none;"><img src="images/C'est trop bon logo.png" alt="" style="width: 80px;"></a>
+    <div class="nav-links">
+        <a href="renkin.html">食材錬金</a>
+        <a href="roulette.html">食材ルーレット</a>
+        <a href="ranking.html">ランキング</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="auth.html">ログイン</a>
+    </div>
+</nav>
+    <div class="auth-wrap">
+    <div class="auth-card">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('login')">ログイン</div>
+            <div class="tab" onclick="switchTab('signup')">新規登録</div>
+        </div>
+        <form id="authForm">
+            <div class="form-group">
+                <label>メールアドレス</label>
+                <input type="email" placeholder="example@mail.com" required>
+            </div>
+            <div class="form-group">
+                <label>パスワード</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-auth" id="submitBtn">ログイン</button>
+        </form>
+        <div class="social-login">
+            または SNSアカウントでログイン
+        </div>
+
+    </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
