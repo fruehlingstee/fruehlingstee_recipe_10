@@ -254,69 +254,6 @@ function resetShop(){
   }
 }
 
-/*  Auth  */
-
-let currentMode = "login";
-
-function switchTab(mode){
-  currentMode = mode;
-
-  document.querySelectorAll(".tab").forEach(tab=>{
-    tab.classList.remove("active");
-  });
-
-  document.querySelectorAll(".tab").forEach(tab=>{
-    if(tab.innerText.includes(mode==="login"?"ログイン":"新規登録")){
-      tab.classList.add("active");
-    }
-  });
-
-  document.getElementById("submitBtn").innerText =
-    mode === "signup" ? "登録" : "ログイン";
-}
-
-
-/* フォーム処理 */
-document.addEventListener("DOMContentLoaded", ()=>{
-  const form = document.getElementById("authForm");
-  if(!form) return;
-
-  form.addEventListener("submit", function(e){
-    e.preventDefault();
-
-    const email = form.querySelector("input[type='email']").value;
-    const pass  = form.querySelector("input[type='password']").value;
-
-    if(currentMode === "signup"){
-      /* 新規登録 */
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      if(users.find(u=>u.email===email)){
-        alert("既に登録済みです");
-        return;
-      }
-      users.push({email, pass});
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("登録完了");
-      switchTab("login");
-    }
-    else{
-      /* ログイン */
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const user = users.find(u=>u.email===email && u.pass===pass);
-      if(!user){
-        alert("メールまたはパスワードが違います");
-        return;
-      }
-      localStorage.setItem("loginUser", email);
-      alert("ログイン成功");
-      location.href = "mypage.html";
-    }
-
-    form.reset();
-  });
-});
-
-
 /*  ranking  */
 
 /* ranking */
@@ -447,3 +384,4 @@ function findRenkin(a,b){
 
  return recipes.find(x=>x.id===hit.result);
 }
+
