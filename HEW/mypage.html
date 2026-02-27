@@ -38,19 +38,71 @@
 
 <script src="js/main.js"></script>
 <script type="module">
-  import { auth } from "./js/firebase.js";
+  import { auth, db } from "./js/firebase.js";
   import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      location.href = "auth.html"; // 未ログインなら追い返す
-    } else {
-      // ログイン中のメールをページに表示（任意）
-      const nav = document.querySelector(".nav-links a[href='auth.html']");
-      if(nav) nav.textContent = user.email; // ナビの「ログイン」をメアドに変える
+      location.href = "auth.html";
+      return;
     }
+
+    // ナビのログイン表示をメアドに変える
+    const nav = document.querySelector(".nav-links a[href='auth.html']");
+    if(nav) nav.textContent = user.email;
+
+    const uid = user.uid; // ユーザーごとの固有ID
+
+    // Firestoreからデータ取得
+    const docSnap = await getDoc(doc(db, "users", uid));
+    const data = docSnap.exists() ? docSnap.data() : { favs: [], shop: [], ingredients: [] };
+
+    // お気に入り表示
+    const favsEl = document.getElementById("favs");
+    if(favsEl){
+      favsEl.innerHTML = recipes
+        .filter(r => data.favs.includes(r.id))
+        .map(r => `<div class="list-item"><a href="detail.html?id=${r.id}">${r.name}</a></div>`)
+        .join("") || "なし";
+    }
+
+    // 買い物リスト表示
+    const shopsEl = document.getElementById("shops");
+    if(shopsEl){
+      shopsEl.innerHTML = data.shop
+        .map((x, i) => `<div class="list-item ${x.checked ? "checked" : ""}"
+          onclick="toggleShopFirestore('${uid}', ${i})">${x.text}</div>`)
+        .join("") || "空";
+    }
+
+    // 在庫表示
+    const stocksEl = document.getElementById("stocks");
+    if(stocksEl){
+      stocksEl.textContent = data.ingredients.join(" , ");
+    }
+
+    // リセットボタンの上書き
+    window.resetFavs = async () => {
+      if(!confirm("保存したレシピを全て削除しますか？")) return;
+      await setDoc(doc(db, "users", uid), { ...data, favs: [] }, { merge: true });
+      location.reload();
+    };
+
+    window.resetShop = async () => {
+      if(!confirm("買い物リストを全て削除しますか？")) return;
+      await setDoc(doc(db, "users", uid), { ...data, shop: [] }, { merge: true });
+      location.reload();
+    };
+
+    window.toggleShopFirestore = async (uid, index) => {
+      data.shop[index].checked = !data.shop[index].checked;
+      await setDoc(doc(db, "users", uid), { ...data }, { merge: true });
+      location.reload();
+    };
   });
 </script>
 </body>
 </html>
+
 
