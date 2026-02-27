@@ -40,6 +40,62 @@
 
     </div>
     </div>
-    <script src="js/main.js"></script>
+    <script type="module">
+  import { auth } from "./js/firebase.js";
+  import {
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  // タブ切り替え（既存のままでOK）
+  let currentMode = "login";
+  window.switchTab = function(mode) {
+    currentMode = mode;
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.classList.remove("active");
+    });
+    document.querySelectorAll(".tab").forEach(tab => {
+      if(tab.innerText.includes(mode === "login" ? "ログイン" : "新規登録")){
+        tab.classList.add("active");
+      }
+    });
+    document.getElementById("submitBtn").innerText =
+      mode === "signup" ? "登録" : "ログイン";
+  };
+
+  // フォーム送信
+  document.getElementById("authForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const email = this.querySelector("input[type='email']").value;
+    const pass  = this.querySelector("input[type='password']").value;
+
+    try {
+      if(currentMode === "signup") {
+        // 新規登録
+        await createUserWithEmailAndPassword(auth, email, pass);
+        alert("登録完了！");
+      } else {
+        // ログイン
+        await signInWithEmailAndPassword(auth, email, pass);
+        alert("ログイン成功！");
+      }
+      location.href = "mypage.html";
+
+    } catch(err) {
+      // エラーの種類によってメッセージを出し分ける
+      if(err.code === "auth/email-already-in-use") {
+        alert("このメールはすでに登録されています");
+      } else if(err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+        alert("メールまたはパスワードが違います");
+      } else if(err.code === "auth/weak-password") {
+        alert("パスワードは6文字以上にしてください");
+      } else {
+        alert("エラー：" + err.message);
+      }
+    }
+  });
+</script>
 </body>
 </html>
+
