@@ -37,5 +37,34 @@
 </div>
 
 <script src="js/main.js"></script>
+<script type="module">
+  import { auth, db } from "./js/firebase.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const id = parseInt(new URLSearchParams(location.search).get("id"));
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) return;
+    const uid = user.uid;
+
+    // お気に入りボタンを上書き
+    window.toggleFav = async () => {
+      const ref = doc(db, "users", uid);
+      const snap = await getDoc(ref);
+      const data = snap.exists() ? snap.data() : { favs: [], shop: [], ingredients: [] };
+
+      if(data.favs.includes(id)){
+        data.favs = data.favs.filter(f => f !== id);
+      } else {
+        data.favs.push(id);
+      }
+
+      await setDoc(ref, data, { merge: true });
+      alert(data.favs.includes(id) ? "お気に入りに追加！" : "お気に入りを解除しました");
+    };
+  });
+</script>
 </body>
 </html>
+
