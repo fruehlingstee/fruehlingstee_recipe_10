@@ -307,7 +307,7 @@ function initRanking() {
 window.onload = () => {
   initIndex();
   initDetail();
-  initMyPage();
+  // initMyPage();
   initRanking();
 };
 
@@ -384,4 +384,5 @@ function findRenkin(a,b){
 
  return recipes.find(x=>x.id===hit.result);
 }
+
 
