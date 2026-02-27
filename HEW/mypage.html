@@ -37,5 +37,20 @@
     </div>
 
 <script src="js/main.js"></script>
+<script type="module">
+  import { auth } from "./js/firebase.js";
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      location.href = "auth.html"; // 未ログインなら追い返す
+    } else {
+      // ログイン中のメールをページに表示（任意）
+      const nav = document.querySelector(".nav-links a[href='auth.html']");
+      if(nav) nav.textContent = user.email; // ナビの「ログイン」をメアドに変える
+    }
+  });
+</script>
 </body>
 </html>
+
