@@ -253,9 +253,6 @@ function resetShop(){
     initMyPage();
   }
 }
-
-/*  ranking  */
-
 /* ranking */
 
 function getRankingData() {
@@ -384,5 +381,6 @@ function findRenkin(a,b){
 
  return recipes.find(x=>x.id===hit.result);
 }
+
 
 
