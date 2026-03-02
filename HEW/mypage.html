@@ -30,10 +30,6 @@
             <button onclick="resetShop()" class="reset-btn">🗑 リストをリセット</button>
             <div id="shops"></div>
         </div>
-        <div class="box" style="grid-column: 1 / -1;">
-            <h2>📦 現在の在庫</h2>
-            <div id="stocks"></div>
-        </div>
     </div>
 
 <script src="js/main.js"></script>
@@ -76,12 +72,6 @@
         .join("") || "空";
     }
 
-    // 在庫表示
-    const stocksEl = document.getElementById("stocks");
-    if(stocksEl){
-      stocksEl.textContent = data.ingredients.join(" , ");
-    }
-
     // リセットボタンの上書き
     window.resetFavs = async () => {
       if(!confirm("保存したレシピを全て削除しますか？")) return;
@@ -104,5 +94,6 @@
 </script>
 </body>
 </html>
+
 
 
