@@ -24,10 +24,10 @@
             <button class="btn-action fav-btn" onclick="toggleFav()">❤️ お気に入り</button>
         </div>
         <div id="aiBox" style="display:none; background:#f5f3ff; padding:15px; border-radius:10px; margin-bottom:20px; border-left:4px solid #8b5cf6;"></div>
-        
+
         <h3>材料</h3>
         <ul id="rIngs"></ul>
-        
+
         <h3>作り方</h3>
         <ol id="rSteps"></ol>
         <a href="index.html">← 戻る</a>
@@ -37,20 +37,25 @@
 <script type="module">
   import { auth, db } from "./js/firebase.js";
   import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const id = parseInt(new URLSearchParams(location.search).get("id"));
+  const recipeId = parseInt(new URLSearchParams(location.search).get("id"));
+
+  // ✅ 閲覧数を Firestore に加算（ログイン不要・誰でもカウント）
+  if(recipeId){
+    const viewRef = doc(db, "recipeStats", String(recipeId));
+    setDoc(viewRef, { views: increment(1) }, { merge: true }).catch(console.error);
+  }
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) return;
     const uid = user.uid;
 
-    // ✅ 買い物リストをFirestoreに保存するよう上書き
+    // ✅ 買い物リストを Firestore に保存
     window.addShop = async (text) => {
       const ref = doc(db, "users", uid);
       const snap = await getDoc(ref);
       const data = snap.exists() ? snap.data() : { favs: [], shop: [], ingredients: [] };
-
       if (!data.shop.find(x => x.text === text)) {
         data.shop.push({ text, checked: false });
         await setDoc(ref, data, { merge: true });
@@ -58,19 +63,22 @@
       alert("買い物リストに追加しました！");
     };
 
-    // お気に入りボタンをFirestoreに保存するよう上書き
+    // ✅ お気に入りを Firestore に保存
     window.toggleFav = async () => {
       const ref = doc(db, "users", uid);
       const snap = await getDoc(ref);
       const data = snap.exists() ? snap.data() : { favs: [], shop: [], ingredients: [] };
-
-      if (data.favs.includes(id)) {
-        data.favs = data.favs.filter(f => f !== id);
+      if (data.favs.includes(recipeId)) {
+        data.favs = data.favs.filter(f => f !== recipeId);
       } else {
-        data.favs.push(id);
+        data.favs.push(recipeId);
       }
       await setDoc(ref, data, { merge: true });
-      alert(data.favs.includes(id) ? "お気に入りに追加！" : "お気に入りを解除しました");
+      // お気に入り数も recipeStats に反映
+      const statsRef = doc(db, "recipeStats", String(recipeId));
+      const isFaved = data.favs.includes(recipeId);
+      await setDoc(statsRef, { favs: increment(isFaved ? 1 : -1) }, { merge: true });
+      alert(isFaved ? "お気に入りに追加！" : "お気に入りを解除しました");
     };
   });
 </script>
