@@ -21,10 +21,54 @@
     <div class="nav-back"><a href="index.html" style="text-decoration:none; color:var(--accent);">← ホームへ戻る</a></div>
     <h1 style="text-align: center;">レシピ殿堂入りランキング</h1>
     <p style="text-align: center; color: #666;">2026年3月のアクセス・お気に入り数に基づいています</p>
-    
+    <p id="loadingMsg" style="text-align:center; color:#999;">読み込み中...</p>
     <div id="rankingList"></div>
 </div>
-
 <script src="js/main.js"></script>
+<script type="module">
+  import { db } from "./js/firebase.js";
+  import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  (async () => {
+    // ✅ Firestore の recipeStats コレクションから全レシピの統計を取得
+    const snapshot = await getDocs(collection(db, "recipeStats"));
+
+    // recipeId → { views, favs } のマップを作成
+    const statsMap = {};
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      statsMap[Number(docSnap.id)] = {
+        views: data.views || 0,
+        favs:  data.favs  || 0,
+      };
+    });
+
+    // スコア計算してソート
+    const ranking = recipes
+      .map(recipe => {
+        const stats = statsMap[recipe.id] || { views: 0, favs: 0 };
+        const score = stats.views + stats.favs * 3;
+        return { ...recipe, views: stats.views, favs: stats.favs, score };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    // 描画
+    document.getElementById("loadingMsg").style.display = "none";
+    const container = document.getElementById("rankingList");
+    container.innerHTML = ranking.map((r, i) => `
+      <a href="detail.html?id=${r.id}" style="text-decoration:none; color:inherit;">
+        <div class="rank-card" style="display:flex; gap:15px; margin:15px 0; align-items:center;">
+          <div style="font-size:1.2rem; font-weight:bold; width:30px;">${i + 1}位</div>
+          <img src="${r.img}" alt="${r.name}"
+               style="width:100px; height:100px; object-fit:cover; border-radius:8px;">
+          <div>
+            <div style="font-weight:bold;">${r.name}</div>
+            <div style="font-size:0.9rem;">👁 ${r.views}　★ ${r.favs}</div>
+          </div>
+        </div>
+      </a>
+    `).join("") || "データなし";
+  })();
+</script>
 </body>
 </html>
